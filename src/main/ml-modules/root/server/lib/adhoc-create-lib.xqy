@@ -60,31 +60,6 @@ declare function lib-adhoc-create:create-ewq($file-type as xs:string,$data-type 
 	  else
 		  ()
 };
-
-declare function lib-adhoc-create:create-erq($file-type as xs:string,$data-type as xs:string,$i, $xpath as xs:string) {
- let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "last")
- return
-	  if ( $file-type = $const:FILE_TYPE_XML) then
- 			fn:concat('if ($param', $i, ') then cts:element-range-query(xs:QName("', $elementname, '"), $param', $i, ')
-            else ()')
-	  	(:
-			else  if ( $file-type = $const:FILE_TYPE_JSON) then
-	      if ( $data-type = $const:DATA_TYPE_TEXT ) then
-		    fn:concat('if ($param', $i, ') then cts:json-property-word-query("', $elementname, '", fn:string($param', $i, '))
-               else ()')
-		  else if ( $data-type = $const:DATA_TYPE_NUMBER ) then
-			  fn:concat('if ($param', $i, ') then cts:json-property-value-query("', $elementname, '", xs:decimal($param', $i, '))
-               else ()')
-		  else if ( $data-type = $const:DATA_TYPE_BOOLEAN ) then
-				  fn:concat('if ($param', $i, ') then cts:json-property-value-query("', $elementname, '", xs:boolean($param', $i, '))
-               else ()')
-			:)
-		  else
-				  ()
-	  else
-		  ()
-};
-
 declare function lib-adhoc-create:create-eq($file-type as xs:string,$xpath as xs:string, $params){
  let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "root")
  return
@@ -173,10 +148,8 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 	return fn:true()
 };
 
-(: 
-@TODO Need to create function that builds element-range-query 
-See similar lib-adhoc-create:create-ewq
-:)
+(: @TODO Need to create function that builds element-range-query :)
+(: See similar lib-adhoc-create:create-ewq :)
 
 (: @TODO Need to create range index :)
 (: @TODO Need to call function that builds element-range-query :)

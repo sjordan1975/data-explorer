@@ -29,17 +29,21 @@
             </select>
           </div>
           <div ng-show="textFields.length">
-            <div ng-repeat="item in textFields" class="form-group">
-              <label for="input{{index+1}}">{{ item[0] }}</label>
-
-              <div ng-if="item[3] == 'yes'">
-                <input ng-if="item[2] == 'date'" type="date" class="form-control" ng-model="inputField[$index+1]" id="input{{index+1}}" placeholder="From"/>
-                <input ng-if="item[2] == 'date'" type="date" class="form-control" ng-model="inputField[$index+1]" id="input{{index+1}}" placeholder="To"/>
-                <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputField[$index+1]" id="input{{index+1}}" placeholder="From"/>
-                <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputField[$index+1]" id="input{{index+1}}" placeholder="To"/>
+            <div ng-repeat="item in textFields">
+            
+              <div ng-if="item[3] == 'yes'" class="form-group">
+                <label for="inputFrom{{index+1}}">From ({{ item[0] }})</label>
+                <input ng-if="item[2] == 'date'" type="date" class="form-control" id="inputFrom{{index+1}}" placeholder="From"/>
+                <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputField[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
               </div>
 
-              <div ng-if="item[3] != 'yes'">
+              <div ng-if="item[3] == 'yes'" class="form-group">
+                  <label for="inputTo{{index+1}}">To ({{ item[0] }})</label>
+                  <input ng-if="item[2] == 'date'" type="date" class="form-control" id="inputTo{{index+1}}" placeholder="To"/>
+                  <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputField[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
+                </div>
+
+              <div ng-if="item[3] != 'yes'" class="form-group">
                 <select ng-if="item[2] == 'boolean'" ng-model="inputField[$index+1]" class="form-control" ng-options="item for item in ['','true', 'false']"></select>
                 <input ng-if="item[2] == 'text'"  type="text" class="form-control" ng-model="inputField[$index+1]" id="input{{index+1}}" placeholder="{{ item[1] }}"/>
                 <input ng-if="item[2] == 'number'"  type="number" class="form-control" ng-model="inputField[$index+1]" id="input{{index+1}}" placeholder="{{ item[1] }}"/>
