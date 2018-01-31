@@ -160,8 +160,9 @@ angular.module('demoApp')
             	if($scope.wizardForm.fields[i-1].include){
             		data['formLabel'+counter] = $scope.wizardForm.fields[i-1].title;
             		data['formLabelHidden'+counter] = $scope.wizardForm.fields[i-1].xpathNormal;
-            		data['formLabelDataType'+counter] = $scope.wizardForm.fields[i-1].dataType;
-            		data['formLabelIncludeMode' + counter] = $scope.wizardForm.fields[i-1].includeMode;
+            		data['formLabelDataType'+counter] = $scope.wizardForm.fields[i-1].typeData;
+                    data['formLabelIncludeMode' + counter] = $scope.wizardForm.fields[i-1].includeMode;
+                    data['formLabelIsRange' + counter] = $scope.wizardForm.fields[i-1].isRange;
             		counter += 1;
             	}
             }
@@ -175,8 +176,9 @@ angular.module('demoApp')
             	if($scope.wizardForm.fields[i-1].include){
 	                data['columnName'+counter] = $scope.wizardForm.fields[i-1].title;
 	                data['columnExpr'+counter] = $scope.wizardForm.fields[i-1].xpathNormal;
-            		data['columnDataType'+counter] = $scope.wizardForm.fields[i-1].dataType;
-	        		data['columnIncludeMode' + counter] = $scope.wizardForm.fields[i-1].includeMode;
+            		data['columnDataType'+counter] = $scope.wizardForm.fields[i-1].typeData;
+                    data['columnIncludeMode' + counter] = $scope.wizardForm.fields[i-1].includeMode;
+                    //data['columnIsRange' + counter] = $scope.wizardForm.fields[i-1].isRange;
 	        		counter += 1;
             	}
             }

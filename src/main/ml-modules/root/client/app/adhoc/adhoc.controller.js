@@ -105,11 +105,13 @@ factory('$click', function() {
             if ($scope.queries[i].query == newValue) {
               var dataTypes = $scope.queries[i]['form-datatypes']
               var formLabels = $scope.queries[i]['form-labels']
+              var ranges = $scope.queries[i]['ranges']
               var arr = new Array(formLabels.length)
               for ( i = 0 ; i < formLabels.length ; i++ ) {
                  var formLabel = formLabels[i]
                  var dataTypeString = "";
                  var dt = "text"
+                 var range = (ranges[i]) ? ranges[i] : 'no'
                  if ( i < dataTypes.length ) {
                     var dataType = dataTypes[i]
                     dt = dataType
@@ -121,9 +123,11 @@ factory('$click', function() {
                  arr[i][0] = formLabel;
                  arr[i][1] = formLabel+dataTypeString
                  arr[i][2] = dt
+                 arr[i][3] = range
               }
               $scope.textFields = arr
-              $scope.dataTypes = dataTypes
+              $scope.dataTypes  = dataTypes
+              $scope.ranges     = ranges
               break;
             }
           }

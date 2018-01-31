@@ -92,8 +92,10 @@
 	        			<thead>
 	        				<tr>
 	        					<th style="min-width:150px">Name in Data</th>
-	        					<th>Include</th>
-	        					<th style="width:100%">Name in Search and/or Results</th>
+								<th>Include</th>
+								<th ng-if="wizardForm.type == 'Query'" style="min-width:100px">Data Type</th>
+								<th ng-if="wizardForm.type == 'Query'" style="min-width:110px">Create Range</th>
+								<th style="width:100%">Name in Search and/or Results</th>
 	        				</tr>
 	        			</thead>
 	        			<tbody>
@@ -107,7 +109,21 @@
 					      				<option ng-if="wizardForm.type == 'Query'" value="view">Results Only</option>
 					      				<option ng-if="wizardForm.type != 'Query'" value="view">Yes</option>
 					      			</select>
-	        					</td>
+								</td>
+								<td ng-if="wizardForm.type == 'Query'">
+										<select class="form-control" ng-model="field.typeData">
+											<option value="date">Date</option>
+											<option value="float">Float</option>
+											<option value="int">Integer</option>
+											<option value="string">String</option>
+										</select>
+									</td>
+								<td ng-if="wizardForm.type == 'Query'">
+									<select class="form-control" ng-model="field.isRange">
+										<option value="no">No</option>
+										<option value="yes">Yes</option>
+									</select>
+								</td>
 	        					<td><input ng-required="field.include" ng-disabled="!field.include" type="text" class="form-control" ng-model="field.title"/></td>
 	        				</tr>
 	        			</tbody>

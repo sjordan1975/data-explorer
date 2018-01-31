@@ -109,6 +109,7 @@ declare variable $endpoints:ENDPOINTS as element(rest:options) :=
             {endpoints:numbered-params("formLabel", (1 to 250))}
             {endpoints:numbered-params("formLabelHidden", (1 to 250))}
             {endpoints:numbered-params("formLabelIncludeMode", (1 to 250))}
+            {endpoints:numbered-params("formLabelIsRange", (1 to 250))}
             {endpoints:numbered-params("columnName", (1 to 250))}
             {endpoints:numbered-params("columnExpr", (1 to 250))}                    
             {endpoints:numbered-params("columnIncludeMode", (1 to 250))}

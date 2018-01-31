@@ -25,7 +25,8 @@ declare function local:get-queries-views-json($db as xs:string, $doctype as xs:s
         let $form-items := lib-adhoc:get-query-form-items($doctype,$q)
         let $labels := to-json:seq-to-array-json(to-json:string-sequence-to-json($form-items/label))
         let $datatypes := to-json:seq-to-array-json(to-json:string-sequence-to-json($form-items/dataType))
-        return to-json:xml-obj-to-json(<output><query>{$q}</query><form-labels>{$labels}</form-labels><form-datatypes>{$datatypes}</form-datatypes></output>)
+        let $ranges := to-json:seq-to-array-json(to-json:string-sequence-to-json($form-items/range))
+        return to-json:xml-obj-to-json(<output><query>{$q}</query><form-labels>{$labels}</form-labels><form-datatypes>{$datatypes}</form-datatypes><ranges>{$ranges}</ranges></output>)
 
     let $queries-json := to-json:seq-to-array-json($queries-array-sequence)
     let $views-json   := to-json:seq-to-array-json(to-json:string-sequence-to-json($views))
