@@ -148,6 +148,13 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 	return fn:true()
 };
 
+(: 
+@TODONeed to create function that builds element-range-query 
+See similar lib-adhoc-create:create-ewq
+:)
+
+(: @TODO Need to create range index :)
+(: @TODO Need to call function that builds element-range-query :)
 declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map){
 	  let $params :=
 	    for $key in map:keys($form-fields-map)
