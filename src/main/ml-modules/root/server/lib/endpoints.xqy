@@ -79,6 +79,8 @@ declare variable $endpoints:ENDPOINTS as element(rest:options) :=
             <param name="queryName"/>
             <param name="viewName"/>
             { endpoints:numbered-params("id", (1 to 15)) }
+            { endpoints:numbered-params("rangeFrom", (1 to 15)) }
+            { endpoints:numbered-params("rangeTo", (1 to 15)) }
             <param name="searchText"/>
             <param name="excludedeleted"/>
             <param name="excludeversions"/>
