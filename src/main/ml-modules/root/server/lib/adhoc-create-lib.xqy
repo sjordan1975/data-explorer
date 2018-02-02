@@ -8,7 +8,7 @@ import module namespace lib-adhoc = "http://marklogic.com/data-explore/lib/adhoc
 import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
 
 declare  namespace sec="http://marklogic.com/xdmp/security";
-
+declare namespace database="http://marklogic.com/xdmp/database";
 
 declare variable $form-fields-map :=
 	let $form-map := map:map()
@@ -161,16 +161,38 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 	return fn:true()
 };
 
+(: Get the range element index definition from the specified database  :)
+declare function lib-adhoc-create:get-range-element-index($database as xs:string, $namespace as xs:string, $elementname as xs:string) {
+  let $config := admin:get-configuration()
+  let $database-id := xdmp:database($database)
+
+  let $eriList := admin:database-get-range-element-indexes($config, $database-id)
+
+  return
+    for $index in $eriList
+      return
+        if ($index/database:localname/text() = $elementname and $index/database:namespace-uri = $namespace) then
+          $index
+        else
+          ()
+};
+
 (: Create range index :)
 declare function lib-adhoc-create:create-range-index($database as xs:string, $datatype as xs:string, $namespace as xs:string, $elementname as xs:string){
-	let $config := admin:get-configuration()
-  let $dbid := xdmp:database($database)
+  let $index := lib-adhoc-create:get-range-element-index($database, $namespace, $elementname)
+
+  let $config := admin:get-configuration()
+  let $database-id := xdmp:database()
+
+  let $newConfig := if (not(empty($index))) then
+    admin:database-delete-range-element-index($config, $database-id, $index)
+  else
+    $config
+
   let $rangespec := admin:database-range-element-index($datatype, $namespace, $elementname, "http://marklogic.com/collation/", fn:false() )
-  let $newConfig := admin:database-add-range-element-index($config, $dbid, $rangespec)
+  let $newConfig := admin:database-add-range-element-index($newConfig, $database-id, $rangespec)
 
-	let $_ := xdmp:log($newConfig)
-
-	return admin:save-configuration($newConfig)
+  return admin:save-configuration($newConfig)
 };
 
 (: Create element-range-query :)
