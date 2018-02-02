@@ -181,34 +181,20 @@ declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type
 			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, '), cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, '))) 
 			 
 			 else if ($from', $i,') 
-			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, ') )) 
+			 then cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, ')  
 
 			 else if ($to', $i,') 
-			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, ') )) 
+			 then cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, ')  
 			 
 			 else ()')
 	  else
 		  ()
-
-		(:
-		return
- cts:element-query(xs:QName("farmersMarket"), 
-      if ($from1 and $to1) then 
-          cts:and-query((cts:element-range-query(xs:QName("MarketName"), ">=", $from1), cts:element-range-query(xs:QName("MarketName"), "<=", $to1))) 
-      else () 
-      )
-		
-		:)
 };
 
 declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map){
 	  let $params :=
 	    for $key in map:keys($form-fields-map)
 	    return lib-adhoc-create:create-params(fn:substring($key, 3))
-
-		(: let $_ := 
-			for $key in map:keys($adhoc-fields)
-				return xdmp:log($key || " - " || map:get($adhoc-fields, $key)) :)
 
 	  let $word-query := fn:concat('let $word := map:get($params, "word")', fn:codepoints-to-string(10), 'return', fn:codepoints-to-string(10))
 	  let $evqs :=
@@ -217,10 +203,11 @@ declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,
 
 				return
 					if (map:get($data-ranges-map,$key) = "yes") then (: isRange? create range index and call function that builds element-range-query :)
-						let $elementname := substring-after(lib-adhoc-create:get-elementname($file-type, map:get($form-fields-map, $key), "last"), ':')
+						let $elementname := lib-adhoc-create:get-elementname($file-type, map:get($form-fields-map, $key), "last")
+						let $localname   := substring-after($elementname, ':')
 						let $data-type   := map:get($data-types-map,$key)
 						let $namespace   := ''
-						let $_ := lib-adhoc-create:create-range-index( map:get($adhoc-fields, "database"), $data-type, $namespace, $elementname)
+						let $_ := lib-adhoc-create:create-range-index( map:get($adhoc-fields, "database"), $data-type, $namespace, $localname)
 						return
 							lib-adhoc-create:create-erq($file-type, $data-type, fn:substring($key, 3), $elementname)
 					else
