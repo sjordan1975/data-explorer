@@ -230,12 +230,12 @@ factory('$click', function() {
       }
 
       $scope.inputFieldFrom.forEach(function(field, index){
-        var prop = 'rangeFrom' + index;
+        var prop = 'from' + index;
         params[prop] = field
       })  
       
       $scope.inputFieldTo.forEach(function(field, index){
-        var prop = 'rangeTo' + index;
+        var prop = 'to' + index;
         params[prop] = field
       })  
 

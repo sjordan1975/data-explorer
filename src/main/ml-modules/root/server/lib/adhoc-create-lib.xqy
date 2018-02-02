@@ -42,7 +42,12 @@ declare function lib-adhoc-create:get-elementname($file-type as xs:string,$xpath
 };
 
 declare function lib-adhoc-create:create-params($i){
-  fn:concat('let $param', $i, ' := map:get($params, "id', $i, '")')
+  let $idParam   := fn:concat('let $param', $i, ' := map:get($params, "id', $i, '")')
+	let $fromParam := fn:concat('let $from', $i, ' := map:get($params, "from', $i, '")')
+	let $toParam   := fn:concat('let $to', $i, ' := map:get($params, "to', $i, '")')
+
+	return
+		fn:concat($idParam, ' ', $fromParam, ' ', $toParam)
 };
 
 declare function lib-adhoc-create:create-ewq($file-type as xs:string,$data-type as xs:string,$i, $xpath as xs:string) {
