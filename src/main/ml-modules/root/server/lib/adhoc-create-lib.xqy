@@ -177,10 +177,28 @@ declare function lib-adhoc-create:create-range-index($database as xs:string, $da
 (: See similar lib-adhoc-create:create-ewq :)
 declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type as xs:string, $i, $elementname as xs:string) {
 	  if ( $file-type = $const:FILE_TYPE_XML) then
- 			fn:concat('if ($param', $i, ') then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), '>', $param', $i, ')), (cts:element-range-query(xs:QName("', $elementname, '"), '<', $param', $i, '))) 
+ 			fn:concat('if ($from', $i, ' and $to', $i,') 
+			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, '), cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, '))) 
+			 
+			 else if ($from', $i,') 
+			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, ') )) 
+
+			 else if ($to', $i,') 
+			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, ') )) 
+			 
 			 else ()')
 	  else
 		  ()
+
+		(:
+		return
+ cts:element-query(xs:QName("farmersMarket"), 
+      if ($from1 and $to1) then 
+          cts:and-query((cts:element-range-query(xs:QName("MarketName"), ">=", $from1), cts:element-range-query(xs:QName("MarketName"), "<=", $to1))) 
+      else () 
+      )
+		
+		:)
 };
 
 declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map){
