@@ -178,13 +178,13 @@ declare function lib-adhoc-create:create-range-index($database as xs:string, $da
 declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type as xs:string, $i, $elementname as xs:string) {
 	  if ( $file-type = $const:FILE_TYPE_XML) then
  			fn:concat('if ($from', $i, ' and $to', $i,') 
-			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, '), cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, '))) 
+			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), ">=", $from', $i, '), cts:element-range-query(xs:QName("', $elementname, '"), "<=", $to', $i, '))) 
 			 
 			 else if ($from', $i,') 
-			 then cts:element-range-query(xs:QName("', $elementname, '"), >=, $from', $i, ')  
+			 then cts:element-range-query(xs:QName("', $elementname, '"), ">=", $from', $i, ')  
 
 			 else if ($to', $i,') 
-			 then cts:element-range-query(xs:QName("', $elementname, '"), <=, $to', $i, ')  
+			 then cts:element-range-query(xs:QName("', $elementname, '"), "<=", $to', $i, ')  
 			 
 			 else ()')
 	  else
