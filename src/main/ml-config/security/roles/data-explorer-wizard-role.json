@@ -10,5 +10,11 @@
     "privilege-name" : "xdmp-value",
     "action" : "http://marklogic.com/xdmp/privileges/xdmp-value",
     "kind" : "execute"
+  },{
+    "privilege-name" : "admin-database",
+    "action" : "http://marklogic.com/xdmp/privileges/admin/database",
+    "kind" : "execute"
   }]
 }
+
+

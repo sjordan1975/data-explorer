@@ -71,6 +71,8 @@ angular.module('demoApp', [
       _formState[_savedFields[i]] = $scope[_savedFields[i]]
     }
     _formState.inputField = {};
+    _formState.inputFieldFrom = $scope.inputFieldFrom;
+    _formState.inputFieldTo   = $scope.inputFieldTo;
     for(var i = 1; i <= 15; i++) {
       _formState.inputField[i] = $scope.getField(i);
     }
@@ -81,6 +83,8 @@ angular.module('demoApp', [
       // Reset the form state
       _formState = {};
       _formState.inputField = {};
+      _formState.inputFieldFrom = [];
+      _formState.inputFieldTo = [];
       for(var i = 1; i <= 15; i++) {
         _formState.inputField[i] = '';
       }
@@ -90,7 +94,11 @@ angular.module('demoApp', [
     }
     $scope.currentPage = _formState.currentPage ? _formState.currentPage : 1;
     $scope.inputField = {};
+    $scope.inputFieldFrom = [];
+    $scope.inputFieldTo   = [];
     _formState.inputField = _formState.inputField || {};
+    _formState.inputFieldFrom = _formState.inputFieldFrom || [];
+    _formState.inputFieldTo = _formState.inputFieldTo || [];
     for(var i = 1; i <= 15; i++) {
       $scope.inputField[i] = _formState.inputField[i] || '';
     }

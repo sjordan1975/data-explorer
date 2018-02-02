@@ -5,6 +5,7 @@ import module namespace cfg = "http://www.marklogic.com/data-explore/lib/config"
 import module namespace xu = "http://marklogic.com/data-explore/lib/xdmp-utils" at "/server/lib/xdmp-utils.xqy";
 import module namespace const = "http://www.marklogic.com/data-explore/lib/const" at "/server/lib/const.xqy";
 import module namespace lib-adhoc = "http://marklogic.com/data-explore/lib/adhoc-lib" at "/server/lib/adhoc-lib.xqy";
+import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
 
 declare  namespace sec="http://marklogic.com/xdmp/security";
 
@@ -17,6 +18,11 @@ declare variable $form-fields-map :=
 declare variable $data-types-map :=
 let $dt-map := map:map()
 return $dt-map
+;
+
+declare variable $data-ranges-map :=
+let $dr-map := map:map()
+return $dr-map
 ;
 
 declare function lib-adhoc-create:get-elementname($file-type as xs:string,$xpath as xs:string, $position as xs:string){
@@ -60,6 +66,7 @@ declare function lib-adhoc-create:create-ewq($file-type as xs:string,$data-type 
 	  else
 		  ()
 };
+
 declare function lib-adhoc-create:create-eq($file-type as xs:string,$xpath as xs:string, $params){
  let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "root")
  return
@@ -128,14 +135,15 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 		  	let $counter := 1
 		  	for $i in (1 to 250)
 		  	let $label := map:get($adhoc-fields, fn:concat("formLabel", $i))
-			let $datatype := map:get($adhoc-fields,fn:concat("formLabelDataType",$i))
+			  let $datatype := map:get($adhoc-fields,fn:concat("formLabelDataType",$i))
 		  	let $mode := map:get($adhoc-fields, fn:concat("formLabelIncludeMode", $i))
 				let $range := map:get($adhoc-fields, fn:concat("formLabelIsRange", $i))
 		  	return
 		  		if (fn:exists($label) and ($mode eq "both" or $mode eq "query")) then
-		  		  let $_ := map:put($form-fields-map, fn:concat("id", $counter), map:get($adhoc-fields, fn:concat("formLabelHidden", $i)))
-		          let $_ := map:put($data-types-map, fn:concat("id", $counter), map:get($adhoc-fields, fn:concat("formLabelDataType", $i)))
-		          let $_ := xdmp:set($counter, $counter + 1)
+							let $_ := map:put($form-fields-map, fn:concat("id", $counter), map:get($adhoc-fields, fn:concat("formLabelHidden", $i)))
+							let $_ := map:put($data-types-map, fn:concat("id", $counter), map:get($adhoc-fields, fn:concat("formLabelDataType", $i)))
+							let $_ := map:put($data-ranges-map, fn:concat("id", $counter), map:get($adhoc-fields, fn:concat("formLabelIsRange", $i)))
+							let $_ := xdmp:set($counter, $counter + 1)
 		  		  return
 		  			<formLabel><label>{ $label }</label><dataType>{ $datatype }</dataType><range>{ $range }</range></formLabel>
 		  		else
@@ -148,20 +156,52 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 	return fn:true()
 };
 
-(: @TODO Need to create function that builds element-range-query :)
-(: See similar lib-adhoc-create:create-ewq :)
+(: Create range index :)
+declare function lib-adhoc-create:create-range-index($database as xs:string, $datatype as xs:string, $namespace as xs:string, $elementname as xs:string){
+	let $config := admin:get-configuration()
+  let $dbid := xdmp:database($database)
+  let $rangespec := admin:database-range-element-index($datatype, $namespace, $elementname, "http://marklogic.com/collation/", fn:false() )
+  let $newConfig := admin:database-add-range-element-index($config, $dbid, $rangespec)
 
-(: @TODO Need to create range index :)
-(: @TODO Need to call function that builds element-range-query :)
+	let $_ := xdmp:log($newConfig)
+
+	return admin:save-configuration($newConfig)
+};
+
+(: Create element-range-query :)
+(: See similar lib-adhoc-create:create-ewq :)
+declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type as xs:string, $i, $elementname as xs:string) {
+	  if ( $file-type = $const:FILE_TYPE_XML) then
+ 			fn:concat('if ($param', $i, ') then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), '>', $param', $i, ')), (cts:element-range-query(xs:QName("', $elementname, '"), '<', $param', $i, '))) 
+			 else ()')
+	  else
+		  ()
+};
+
 declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map){
 	  let $params :=
 	    for $key in map:keys($form-fields-map)
 	    return lib-adhoc-create:create-params(fn:substring($key, 3))
 
+		(: let $_ := 
+			for $key in map:keys($adhoc-fields)
+				return xdmp:log($key || " - " || map:get($adhoc-fields, $key)) :)
+
 	  let $word-query := fn:concat('let $word := map:get($params, "word")', fn:codepoints-to-string(10), 'return', fn:codepoints-to-string(10))
 	  let $evqs :=
 	    for $key in map:keys($form-fields-map)
-    	return lib-adhoc-create:create-ewq($file-type,map:get($data-types-map,$key),fn:substring($key, 3),  map:get($form-fields-map, $key))
+				let $_ := xdmp:log("KEY: " || $key || " - " || map:get($form-fields-map, $key))
+
+				return
+					if (map:get($data-ranges-map,$key) = "yes") then (: isRange? create range index and call function that builds element-range-query :)
+						let $elementname := substring-after(lib-adhoc-create:get-elementname($file-type, map:get($form-fields-map, $key), "last"), ':')
+						let $data-type   := map:get($data-types-map,$key)
+						let $namespace   := ''
+						let $_ := lib-adhoc-create:create-range-index( map:get($adhoc-fields, "database"), $data-type, $namespace, $elementname)
+						return
+							lib-adhoc-create:create-erq($file-type, $data-type, fn:substring($key, 3), $elementname)
+					else
+							lib-adhoc-create:create-ewq($file-type,map:get($data-types-map,$key),fn:substring($key, 3),  map:get($form-fields-map, $key))
     return (
     	$params,
     	$word-query,

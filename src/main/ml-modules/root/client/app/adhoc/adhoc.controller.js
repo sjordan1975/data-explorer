@@ -197,37 +197,50 @@ factory('$click', function() {
       	pageNumber= $scope.currentPage
       }
       if(!exportCsv){
-    	$scope.message = 'Searching....';
-    	$scope.results = {};
+        $scope.message = 'Searching....';
+        $scope.results = {};
       }
+
+      var params = {
+        database: $scope.selectedDatabase,
+        searchText: $scope.searchText,
+        docType: $scope.selectedDocType,
+        queryName: $scope.selectedQuery,
+        viewName: $scope.selectedView,
+        id1: $scope.getField(1),
+        id2: $scope.getField(2),
+        id3: $scope.getField(3),
+        id4: $scope.getField(4),
+        id5: $scope.getField(5),
+        id6: $scope.getField(6),
+        id7: $scope.getField(7),
+        id8: $scope.getField(8),
+        id9: $scope.getField(9),
+        id10: $scope.getField(10),
+        id11: $scope.getField(11),
+        id12: $scope.getField(12),
+        id13: $scope.getField(13),
+        id14: $scope.getField(14),
+        id15: $scope.getField(15),
+        excludeversions: 1,
+        excludedeleted: 1,
+        go: 1,
+        pagenumber: pageNumber,
+        exportCsv:exportCsv
+      }
+
+      $scope.inputFieldFrom.forEach(function(field, index){
+        var prop = 'rangeFrom' + index;
+        params[prop] = field
+      })  
+      
+      $scope.inputFieldTo.forEach(function(field, index){
+        var prop = 'rangeTo' + index;
+        params[prop] = field
+      })  
+
       $http.get('/api/search', {
-        params: {
-          database: $scope.selectedDatabase,
-          searchText: $scope.searchText,
-          docType: $scope.selectedDocType,
-          queryName: $scope.selectedQuery,
-          viewName: $scope.selectedView,
-          id1: $scope.getField(1),
-          id2: $scope.getField(2),
-          id3: $scope.getField(3),
-          id4: $scope.getField(4),
-          id5: $scope.getField(5),
-          id6: $scope.getField(6),
-          id7: $scope.getField(7),
-          id8: $scope.getField(8),
-          id9: $scope.getField(9),
-          id10: $scope.getField(10),
-          id11: $scope.getField(11),
-          id12: $scope.getField(12),
-          id13: $scope.getField(13),
-          id14: $scope.getField(14),
-          id15: $scope.getField(15),
-          excludeversions: 1,
-          excludedeleted: 1,
-          go: 1,
-          pagenumber: pageNumber,
-          exportCsv:exportCsv
-        }
+        params: params
       }).success(function(data, status, headers, config) {
     	  if(exportCsv){
     		  

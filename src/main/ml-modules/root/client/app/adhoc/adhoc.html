@@ -30,17 +30,16 @@
           </div>
           <div ng-show="textFields.length">
             <div ng-repeat="item in textFields">
-            
               <div ng-if="item[3] == 'yes'" class="form-group">
                 <label for="inputFrom{{index+1}}">From ({{ item[0] }})</label>
-                <input ng-if="item[2] == 'date'" type="date" class="form-control" id="inputFrom{{index+1}}" placeholder="From"/>
-                <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputField[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
+                <input ng-if="item[2] == 'date'" type="date" class="form-control" ng-model="inputFieldFrom[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
+                <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputFieldFrom[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
               </div>
 
               <div ng-if="item[3] == 'yes'" class="form-group">
                   <label for="inputTo{{index+1}}">To ({{ item[0] }})</label>
-                  <input ng-if="item[2] == 'date'" type="date" class="form-control" id="inputTo{{index+1}}" placeholder="To"/>
-                  <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputField[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
+                  <input ng-if="item[2] == 'date'" type="date" class="form-control" ng-model="inputFieldTo[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
+                  <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputFieldTo[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
                 </div>
 
               <div ng-if="item[3] != 'yes'" class="form-group">
