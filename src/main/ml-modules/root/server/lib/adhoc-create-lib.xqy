@@ -209,7 +209,7 @@ declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,
 						let $namespace   := ''
 						let $_ := lib-adhoc-create:create-range-index( map:get($adhoc-fields, "database"), $data-type, $namespace, $localname)
 						return
-							lib-adhoc-create:create-erq($file-type, $data-type, fn:substring($key, 3), $elementname)
+							lib-adhoc-create:create-erq($file-type, $data-type, fn:substring($key, 3), $localname)
 					else
 							lib-adhoc-create:create-ewq($file-type,map:get($data-types-map,$key),fn:substring($key, 3),  map:get($form-fields-map, $key))
     return (
