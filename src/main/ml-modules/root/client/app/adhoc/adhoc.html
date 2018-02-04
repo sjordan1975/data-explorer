@@ -32,15 +32,15 @@
             <div ng-repeat="item in textFields">
               <div ng-if="item[3] == 'yes'" class="form-group">
                 <label for="inputFrom{{index+1}}">From ({{ item[0] }})</label>
-                <input ng-if="item[2] == 'date'" type="date" class="form-control" ng-model="inputFieldFrom[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
-                <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputFieldFrom[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
+                <input ng-if="item[2] == 'dateTime'" type="date" class="form-control" ng-model="inputFieldFrom[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
+                <input ng-if="item[2] != 'dateTime'" type="text" class="form-control" ng-model="inputFieldFrom[$index+1]" id="inputFrom{{index+1}}" placeholder="From"/>
               </div>
 
               <div ng-if="item[3] == 'yes'" class="form-group">
                   <label for="inputTo{{index+1}}">To ({{ item[0] }})</label>
-                  <input ng-if="item[2] == 'date'" type="date" class="form-control" ng-model="inputFieldTo[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
-                  <input ng-if="item[2] != 'date'" type="text" class="form-control" ng-model="inputFieldTo[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
-                </div>
+                  <input ng-if="item[2] == 'dateTime'" type="date" class="form-control" ng-model="inputFieldTo[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
+                  <input ng-if="item[2] != 'dateTime'" type="text" class="form-control" ng-model="inputFieldTo[$index+1]" id="inputTo{{index+1}}" placeholder="To"/>
+              </div>
 
               <div ng-if="item[3] != 'yes'" class="form-group">
                 <select ng-if="item[2] == 'boolean'" ng-model="inputField[$index+1]" class="form-control" ng-options="item for item in ['','true', 'false']"></select>
@@ -76,9 +76,7 @@
 	                  <div id="hiddenDiv1" ng-hide="true"></div>
                   </td></tr>
                   <tr><td><strong>Page:</strong></td>
-                  <td>{{results['current-page']}} of {{results['page-count'] | number}}
-                	
-                  </td>
+                  <td>{{results['current-page']}} of {{results['page-count'] | number}}</td>
                   </tr>              	
                 </table>
                 <pagination total-items="results['result-count']" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="true" ng-click="search()"></pagination>

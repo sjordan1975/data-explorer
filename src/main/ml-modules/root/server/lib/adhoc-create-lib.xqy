@@ -199,19 +199,30 @@ declare function lib-adhoc-create:create-range-index($database as xs:string, $da
 (: Create element-range-query :)
 (: See similar lib-adhoc-create:create-ewq :)
 declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type as xs:string, $i, $elementname as xs:string, $namespace as xs:string) {
-	  if ( $file-type = $const:FILE_TYPE_XML) then
- 			fn:concat('if ($from', $i, ' and $to', $i,') 
-			 then cts:and-query((cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=", $from', $i, '), cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<=", $to', $i, '))) 
-			 
-			 else if ($from', $i,') 
-			 then cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=", $from', $i, ')  
+	  let $xs :=
+			if ($data-type = "dateTime") then
+				"xs:dateTime"
+			else if($data-type = "int") then
+				"xs:int"
+			else if ($data-type = "float") then
+				"xs:float"
+			else 
+				"xs:string"
 
-			 else if ($to', $i,') 
-			 then cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<=", $to', $i, ')  
-			 
-			 else ()')
-	  else
-		  ()
+		return
+			if ( $file-type = $const:FILE_TYPE_XML) then
+				fn:concat('if ($from', $i, ' and $to', $i,') 
+				then cts:and-query((cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=",', $xs, '($from', $i, ')), cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<=",', $xs, '($to', $i, ')))) 
+				
+				else if ($from', $i,') 
+				then cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=",', $xs, '($from', $i, '))  
+
+				else if ($to', $i,') 
+				then cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<= ",', $xs, '($to', $i, '))   
+				
+				else ()')
+			else
+				()
 };
 
 declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map,$namespace as xs:string){
