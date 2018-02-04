@@ -108,6 +108,7 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 	let $querytext := map:get($adhoc-fields, "queryText")
 	let $database := map:get($adhoc-fields, "database")
 	let $file-type := map:get($adhoc-fields, "fileType")
+	let $namespace := map:get($adhoc-fields, "namespace")
 
 	let $uri :=
 		(: For the filename, only use the local name of the last item in the XPath :)
@@ -154,7 +155,7 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 		  		else
 		  			()
 		  }
-		  <code>{if($querytext) then $querytext else lib-adhoc-create:create-edit-form-code($file-type,$adhoc-fields)}</code>
+		  <code>{if($querytext) then $querytext else lib-adhoc-create:create-edit-form-code($file-type,$adhoc-fields,$namespace)}</code>
 		</formQuery>
   let $_ := xu:document-insert($uri, $form-query)
 
@@ -197,23 +198,23 @@ declare function lib-adhoc-create:create-range-index($database as xs:string, $da
 
 (: Create element-range-query :)
 (: See similar lib-adhoc-create:create-ewq :)
-declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type as xs:string, $i, $elementname as xs:string) {
+declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type as xs:string, $i, $elementname as xs:string, $namespace as xs:string) {
 	  if ( $file-type = $const:FILE_TYPE_XML) then
  			fn:concat('if ($from', $i, ' and $to', $i,') 
-			 then cts:and-query((cts:element-range-query(xs:QName("', $elementname, '"), ">=", $from', $i, '), cts:element-range-query(xs:QName("', $elementname, '"), "<=", $to', $i, '))) 
+			 then cts:and-query((cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=", $from', $i, '), cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<=", $to', $i, '))) 
 			 
 			 else if ($from', $i,') 
-			 then cts:element-range-query(xs:QName("', $elementname, '"), ">=", $from', $i, ')  
+			 then cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=", $from', $i, ')  
 
 			 else if ($to', $i,') 
-			 then cts:element-range-query(xs:QName("', $elementname, '"), "<=", $to', $i, ')  
+			 then cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<=", $to', $i, ')  
 			 
 			 else ()')
 	  else
 		  ()
 };
 
-declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map){
+declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map,$namespace as xs:string){
 	  let $params :=
 	    for $key in map:keys($form-fields-map)
 	    return lib-adhoc-create:create-params(fn:substring($key, 3))
@@ -228,10 +229,9 @@ declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,
 						let $elementname := lib-adhoc-create:get-elementname($file-type, map:get($form-fields-map, $key), "last")
 						let $localname   := substring-after($elementname, ':')
 						let $data-type   := map:get($data-types-map,$key)
-						let $namespace   := ''
 						let $_ := lib-adhoc-create:create-range-index( map:get($adhoc-fields, "database"), $data-type, $namespace, $localname)
 						return
-							lib-adhoc-create:create-erq($file-type, $data-type, fn:substring($key, 3), $localname)
+							lib-adhoc-create:create-erq($file-type, $data-type, fn:substring($key, 3), $localname, $namespace)
 					else
 							lib-adhoc-create:create-ewq($file-type,map:get($data-types-map,$key),fn:substring($key, 3),  map:get($form-fields-map, $key))
     return (
