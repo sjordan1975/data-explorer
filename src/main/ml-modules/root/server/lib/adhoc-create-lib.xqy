@@ -11,15 +11,6 @@ declare  namespace sec="http://marklogic.com/xdmp/security";
 declare namespace database="http://marklogic.com/xdmp/database";
 declare namespace functx = "http://www.functx.com";
 
-declare function functx:substring-after-if-contains
-  ( $arg as xs:string? ,
-    $delim as xs:string )  as xs:string? {
-
-   if (contains($arg,$delim))
-   then substring-after($arg,$delim)
-   else $arg
- } ;
-
 declare variable $form-fields-map :=
 	let $form-map := map:map()
 	return $form-map
