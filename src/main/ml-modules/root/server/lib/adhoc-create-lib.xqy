@@ -10,7 +10,7 @@ import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic
 declare  namespace sec="http://marklogic.com/xdmp/security";
 declare namespace database="http://marklogic.com/xdmp/database";
 
-declare function local:substring-after-if-contains
+declare function lib-adhoc-create:substring-after-if-contains
   ( $arg as xs:string? ,
     $delim as xs:string )  as xs:string? {
 
@@ -247,7 +247,7 @@ declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,
 				return
 					if (map:get($data-ranges-map,$key) = "yes") then (: isRange? create range index and call function that builds element-range-query :)
 						let $elementname := lib-adhoc-create:get-elementname($file-type, map:get($form-fields-map, $key), "last")
-						let $localname   := local:substring-after-if-contains($elementname, ':')
+						let $localname   := lib-adhoc-create:substring-after-if-contains($elementname, ':')
 						let $data-type   := map:get($data-types-map,$key)
 						let $_ := lib-adhoc-create:create-range-index( map:get($adhoc-fields, "database"), $data-type, $namespace, $localname)
 						return
