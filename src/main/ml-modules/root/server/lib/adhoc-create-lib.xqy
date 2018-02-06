@@ -83,13 +83,13 @@ declare function lib-adhoc-create:create-ewq($file-type as xs:string,$data-type 
 
 declare function lib-adhoc-create:create-eq($file-type as xs:string,$xpath as xs:string, $params,$root-element as xs:string){
  let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "root")
- let $tokens := fn:tokenize($root-element, "/")
- let $root := $tokens[fn:last()]
+ (: let $tokens := fn:tokenize($root-element, "/")
+ let $root := $tokens[fn:last()] :)
 
  return
 	 if ( $file-type = $const:FILE_TYPE_XML ) then
 		 fn:concat('cts:element-query(
-  		    xs:QName("', $root, '"), cts:and-query((',  $params, ',if ($word) then
+  		    xs:QName("', $elementname, '"), cts:and-query((',  $params, ',if ($word) then
   			    cts:word-query($word, "case-insensitive")
  			   else
       		())))')
