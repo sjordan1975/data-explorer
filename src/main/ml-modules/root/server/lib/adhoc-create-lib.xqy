@@ -82,7 +82,7 @@ declare function lib-adhoc-create:create-ewq($file-type as xs:string,$data-type 
 };
 
 declare function lib-adhoc-create:create-eq($file-type as xs:string,$xpath as xs:string, $params){
- let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "root")
+ let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "last")
  return
 	 if ( $file-type = $const:FILE_TYPE_XML ) then
 		 fn:concat('cts:element-query(
