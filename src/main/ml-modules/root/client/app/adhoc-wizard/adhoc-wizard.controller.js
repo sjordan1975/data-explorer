@@ -149,8 +149,7 @@ angular.module('demoApp')
         data.queryText = '';
         data.prefix = $scope.wizardForm.prefix;
         data.rootElement = $scope.wizardForm.rootElement;
-        //data.namespace = ($scope.isNamespaceAware) ? $scope.wizardForm.namespaces[0].uri : '';
-        data.namespace = ''; //@NOTE Override above for now
+        data.namespace = ($scope.isNamespaceAware) ? $scope.wizardForm.namespaces[0].uri : '';
         data.database = $scope.formInput.selectedDatabase;
         data.fileType =  $scope.fileType;
         
