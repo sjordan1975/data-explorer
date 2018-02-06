@@ -81,12 +81,15 @@ declare function lib-adhoc-create:create-ewq($file-type as xs:string,$data-type 
 		  ()
 };
 
-declare function lib-adhoc-create:create-eq($file-type as xs:string,$xpath as xs:string, $params){
- let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "last")
+declare function lib-adhoc-create:create-eq($file-type as xs:string,$xpath as xs:string, $params,$root-element as xs:string){
+ let $elementname := lib-adhoc-create:get-elementname($file-type,$xpath, "root")
+ let $tokens := fn:tokenize($root-element, "/")
+ let $root := $tokens[fn:last()]
+
  return
 	 if ( $file-type = $const:FILE_TYPE_XML ) then
 		 fn:concat('cts:element-query(
-  		    xs:QName("', $elementname, '"), cts:and-query((',  $params, ',if ($word) then
+  		    xs:QName("', $root, '"), cts:and-query((',  $params, ',if ($word) then
   			    cts:word-query($word, "case-insensitive")
  			   else
       		())))')
@@ -164,7 +167,7 @@ declare function lib-adhoc-create:create-edit-form-query($adhoc-fields as map:ma
 		  		else
 		  			()
 		  }
-		  <code>{if($querytext) then $querytext else lib-adhoc-create:create-edit-form-code($file-type,$adhoc-fields,$namespace)}</code>
+		  <code>{if($querytext) then $querytext else lib-adhoc-create:create-edit-form-code($file-type,$adhoc-fields,$namespace,$root-element)}</code>
 		</formQuery>
   let $_ := xu:document-insert($uri, $form-query)
 
@@ -234,7 +237,7 @@ declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type
 				()
 };
 
-declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map,$namespace as xs:string){
+declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map,$namespace as xs:string,$root-element as xs:string){
 	  let $params :=
 	    for $key in map:keys($form-fields-map)
 	    return lib-adhoc-create:create-params(fn:substring($key, 3))
@@ -261,7 +264,8 @@ declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,
     	$word-query,
     	lib-adhoc-create:create-eq($file-type,
     		map:get($adhoc-fields, fn:concat("formLabelHidden", 1)),
-    		fn:string-join($evqs, fn:concat(",", fn:codepoints-to-string(10)))
+    		fn:string-join($evqs, fn:concat(",", fn:codepoints-to-string(10))),
+				$root-element
       )
     )
 };
