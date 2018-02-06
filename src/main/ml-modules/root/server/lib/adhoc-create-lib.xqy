@@ -221,21 +221,6 @@ declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type
 		return
 			if ( $file-type = $const:FILE_TYPE_XML) then
 				fn:concat('if ($from', $i, ' and $to', $i,') 
-				then cts:and-query((cts:element-range-query(fn:QName("", "', $elementname, '"), ">=",', $xs, '($from', $i, ')), cts:element-range-query(fn:QName("", "', $elementname, '"), "<=",', $xs, '($to', $i, ')))) 
-				
-				else if ($from', $i,') 
-				then cts:element-range-query(fn:QName("", "', $elementname, '"), ">=",', $xs, '($from', $i, '))  
-
-				else if ($to', $i,') 
-				then cts:element-range-query(fn:QName("", "', $elementname, '"), "<= ",', $xs, '($to', $i, '))   
-				
-				else ()')
-			else
-				()
-
-		(: return
-			if ( $file-type = $const:FILE_TYPE_XML) then
-				fn:concat('if ($from', $i, ' and $to', $i,') 
 				then cts:and-query((cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), ">=",', $xs, '($from', $i, ')), cts:element-range-query(fn:QName("',$namespace,'", "', $elementname, '"), "<=",', $xs, '($to', $i, ')))) 
 				
 				else if ($from', $i,') 
@@ -246,7 +231,7 @@ declare function lib-adhoc-create:create-erq($file-type as xs:string, $data-type
 				
 				else ()')
 			else
-				() :)
+				()
 };
 
 declare function lib-adhoc-create:create-edit-form-code($file-type as xs:string,$adhoc-fields as map:map,$namespace as xs:string){
