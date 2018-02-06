@@ -192,7 +192,7 @@ declare function lib-adhoc-create:create-range-index($database as xs:string, $da
   let $index := lib-adhoc-create:get-range-element-index($database, $namespace, $elementname)
 
   let $config := admin:get-configuration()
-  let $database-id := xdmp:database()
+  let $database-id := xdmp:database($database)
 
   let $newConfig := if (not(empty($index))) then
     admin:database-delete-range-element-index($config, $database-id, $index)
