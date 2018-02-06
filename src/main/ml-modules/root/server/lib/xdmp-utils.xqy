@@ -14,13 +14,6 @@ declare function xu:eval($xquery as xs:string,
    $vars as item()*,
    $options) as item()* {
 
-   let $_ := xdmp:log(text{ ">>>>START XDMP EVAL <<<<"})
-   let $_ := xdmp:log(text{ ">>>>XQUERY = ", $xquery })
-   let $_ := xdmp:log(text{ ">>>>VARS  = ", $vars })
-   let $_ := xdmp:log(text{ ">>>>OPTIONS = ", $options })
-   let $_ := xdmp:log(text{ ">>>>END XDMP EVAL <<<<"})
-
-   return
    xdmp:eval($xquery, $vars, $options)
 	
 };
