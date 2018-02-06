@@ -85,7 +85,7 @@ declare function local:get-result()
 
   let $log := if ($cfg:D) then xdmp:log(text{ "local:get-result, $user-q = ", $user-q }) else ()
 
-  let $log := if (fn:true()) then xdmp:log(text{ ">>>>CODE = ", $code-with-prolog }) else ()
+  let $log := if (fn:true()) then xdmp:log(text{ ">>>>CODE = ", $code-with-prolog, " on DB: ",  $database}) else ()
 
   let $additional-query := cts:and-query(($user-q))(:should add deleted versions and excluded verisons - removed for now :)
 
