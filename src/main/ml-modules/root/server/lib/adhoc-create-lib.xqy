@@ -199,7 +199,8 @@ declare function lib-adhoc-create:create-range-index($database as xs:string, $da
   else
     $config
 
-  let $rangespec := admin:database-range-element-index($datatype, $namespace, $elementname, "http://marklogic.com/collation/", fn:true() )
+  let $rangespec := admin:database-range-element-index($datatype, "", $elementname, "http://marklogic.com/collation/", fn:false() )
+	(: let $rangespec := admin:database-range-element-index($datatype, $namespace, $elementname, "http://marklogic.com/collation/", fn:false() ) :)
   let $newConfig := admin:database-add-range-element-index($newConfig, $database-id, $rangespec)
 
   return admin:save-configuration($newConfig)
